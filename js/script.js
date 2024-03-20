@@ -127,7 +127,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
   // закоментируем тайм аут на время работы
+<<<<<<< HEAD
   const modalTimerId = setTimeout(openModal, 50000);
+=======
+  const modalTimerId = setTimeout(openModal, 3000);
+>>>>>>> 4813a8386df0cad2e0b6c72769b2ba608d02edab
 
   function showModalByScroll() {
     if (
@@ -334,7 +338,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const forms = document.querySelectorAll('form');
   const message = {
+<<<<<<< HEAD
     loading: 'img/form/spinner.svg',
+=======
+    loading: 'Загрузка...',
+>>>>>>> 4813a8386df0cad2e0b6c72769b2ba608d02edab
     success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так...',
   };
@@ -347,6 +355,7 @@ window.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
+<<<<<<< HEAD
       let statusMessage = document.createElement('img');
       statusMessage.src = message.loading;
       statusMessage.style.cssText = `
@@ -355,6 +364,12 @@ window.addEventListener('DOMContentLoaded', () => {
       `;
 
       form.insertAdjacentElement('afterend', statusMessage);
+=======
+      let statusMessage = document.createElement('div');
+      statusMessage.classList.add('status');
+      statusMessage.textContent = message.loading;
+      form.appendChild(statusMessage);
+>>>>>>> 4813a8386df0cad2e0b6c72769b2ba608d02edab
 
       const request = new XMLHttpRequest();
       request.open('POST', 'server.php');
@@ -375,16 +390,27 @@ window.addEventListener('DOMContentLoaded', () => {
       request.addEventListener('load', () => {
         if (request.status === 200) {
           console.log(request.response);
+<<<<<<< HEAD
           showThanksModal(message.success);
           form.reset();
 
           statusMessage.remove();
         } else {
           showThanksModal(message.failure);
+=======
+          statusMessage.textContent = message.success;
+          form.reset();
+          setTimeout(() => {
+            statusMessage.remove();
+          }, 2000);
+        } else {
+          statusMessage.textContent = message.failure;
+>>>>>>> 4813a8386df0cad2e0b6c72769b2ba608d02edab
         }
       });
     });
   }
+<<<<<<< HEAD
 
   function showThanksModal(message) {
     const prevModalDialog = document.querySelector('.modal__dialog');
@@ -409,4 +435,6 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();
     }, 10000);
   }
+=======
+>>>>>>> 4813a8386df0cad2e0b6c72769b2ba608d02edab
 });
