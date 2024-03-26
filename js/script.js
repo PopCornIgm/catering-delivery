@@ -278,60 +278,6 @@ window.addEventListener('DOMContentLoaded', () => {
     'menu__item'
   ).render();
 
-  // Forms
-
-  // const forms = document.querySelectorAll('form');
-
-  // const message = {
-  //   loading: 'Загрузка',
-  //   success: 'Cпасибо, скоро  с вами свяжутся',
-  //   failure: 'Произошла ошибка',
-  // };
-
-  // forms.forEach((item) => {
-  //   postData(item);
-  // });
-
-  // function postData(form) {
-  //   form.addEventListener('sabmit', (e) => {
-  //     // убираем стандартное поведение при сабмите
-  //     e.preventDefault();
-
-  //     let statusMessage = document.createElement('div');
-  //     statusMessage.classList.add('status');
-  //     statusMessage.textContent = message.loading;
-  //     form.append(statusMessage);
-
-  //     const request = new XMLHttpRequest();
-  //     request.open('POST', 'server.php');
-  //     request.setRequestHeader('Content-type', 'aplication/json');
-
-  //     const formData = new FormData(form);
-
-  //     const object = {};
-
-  //     formData.forEach(function (value, key) {
-  //       object[key] = value;
-  //     });
-  //     const json = JSON.stringify(object);
-  //     request.send(json);
-
-  //     request.addEventListener('load', () => {
-  //       if (request.status === 200) {
-  //         console.log(request.response);
-  //         statusMessage.textContent = message.success;
-  //         form.reset();
-  //         setTimeout(() => {
-  //           statusMessage.remove();
-  //         }, 2000);
-  //       } else {
-  //         console.log('request.response');
-  //         statusMessage.textContent = message.failure;
-  //       }
-  //     });
-  //   });
-  // }
-
   const forms = document.querySelectorAll('form');
   const message = {
     loading: 'img/form/spinner.svg',
@@ -356,33 +302,33 @@ window.addEventListener('DOMContentLoaded', () => {
 
       form.insertAdjacentElement('afterend', statusMessage);
 
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-      request.setRequestHeader(
-        'Content-type',
-        'application/json; charset=utf-8'
-      );
       const formData = new FormData(form);
 
       const object = {};
       formData.forEach(function (value, key) {
         object[key] = value;
       });
-      const json = JSON.stringify(object);
 
-      request.send(json);
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
+      fetch('server.php', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(object),
+      })
+        .then((data) => data.text())
+        .then((data) => {
+          console.log(data);
           showThanksModal(message.success);
-          form.reset();
 
           statusMessage.remove();
-        } else {
+        })
+        .catch(() => {
           showThanksModal(message.failure);
-        }
-      });
+        })
+        .finally(() => {
+          form.reset();
+        });
     });
   }
 
