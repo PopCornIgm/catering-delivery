@@ -23,6 +23,10 @@ a {
   transition: 0.3s all;
   outline: 0;
 }
+
+.class {
+  box-sizing: 10px;
+}
 .btn_white {
   background-color: #fff;
 }
