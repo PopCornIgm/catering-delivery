@@ -1,16 +1,28 @@
-function modal() {
-  const modalTriger = document.querySelectorAll('[data-modal]'),
-    modal = document.querySelector('.modal');
+function closeModal(modalSelector) {
+  const modal = document.querySelector(modalSelector);
 
-  function openModal() {
-    modal.classList.add('show');
-    modal.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
+  modal.classList.add('hide');
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+function openModal(modalSelector, modalTimerId) {
+  const modal = document.querySelector(modalSelector);
+
+  modal.classList.add('show');
+  modal.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+  console.log(modalTimerId);
+  if (modalTimerId) {
     clearInterval(modalTimerId);
   }
+}
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
+  const modalTriger = document.querySelectorAll(triggerSelector),
+    modal = document.querySelector(modalSelector);
 
   modalTriger.forEach((btn) => {
-    btn.addEventListener('click', openModal);
+    btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));
     // изначально функцию вы записываем сюда,  в последствии вынесем ее в отдельную функцию openModal
     // modal.classList.add('show');
     // modal.classList.remove('hide');
@@ -18,63 +30,36 @@ function modal() {
     // });
   });
 
-  function closeModal() {
-    modal.classList.add('hide');
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
-  }
-
   modal.addEventListener('click', (e) => {
     if (e.target === modal || e.target.getAttribute('data-close') == '') {
-      closeModal();
+      closeModal(modalSelector);
     }
   });
 
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Escape' && modal.classList.contains('show')) {
-      closeModal();
+      closeModal(modalSelector);
     }
   });
   // закоментируем тайм аут на время работы
-  const modalTimerId = setTimeout(openModal, 50000);
 
   function showModalByScroll() {
     if (
       window.pageYOffset + document.documentElement.clientHeight >=
       document.documentElement.scrollHeight
     ) {
-      openModal();
+      openModal(modalSelector, modalTimerId);
       window.removeEventListener('scroll', showModalByScroll);
     }
   }
 
   window.addEventListener('scroll', showModalByScroll);
-  function showThanksModal(message) {
-    const prevModalDialog = document.querySelector('.modal__dialog');
-
-    prevModalDialog.classList.add('hide');
-    openModal();
-
-    const thanksModal = document.createElement('div');
-    thanksModal.classList.add('.modal__dialog');
-    thanksModal.innerHTML = `
-        <div class= "modal__content">
-        <div class = "modal__close" data close>×</div>
-        <div class =" modal__title"> </div> ${message}
-        </div>
-      `;
-
-    document.querySelector('.modal').append(thanksModal);
-    setTimeout(() => {
-      thanksModal.remove();
-      prevModalDialog.classList.add('show');
-      prevModalDialog.classList.remove('hide');
-      closeModal();
-    }, 10000);
-  }
 
   fetch('http://localhost:3000/menu')
     .then((data) => data.json())
     .then((res) => console.log(res));
 }
-module.exports = modal;
+// module.exports = modal;
+export default modal;
+export { closeModal };
+export { openModal };
